@@ -16,6 +16,118 @@
 
 ## **[ 개발 일지 ]**
 
+### [ 04/13 ]
+
+- 공공데이터 API 사용불가로 비슷한 API로 대체<br>
+  한국전력공사*전기차 충전소 운영정보 -> [한국환경공단*전기자동차 충전소 정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15076352)
+
+  <br>
+
+- 페이지 디자인 - 각자 XD로 디자인<br>
+  지원:![bad1](https://postfiles.pstatic.net/MjAyMjA0MTVfMTc2/MDAxNjUwMDI4NTgyOTI4.-NXJ39ukEYHYzcR2CB_9topXVknA0hes1dlwgQd925sg.dcJDUWPvm_j2bFDE4xKrx-OIKMlhmKlhcrzeaxFr2tAg.JPEG.charade6/%EC%9B%B9_1920_%E2%80%93_1_page-0001.jpg?type=w773)
+  <br>
+  도현:![bad2](https://postfiles.pstatic.net/MjAyMjA0MTVfODEg/MDAxNjUwMDI4NTY1NzI5.Uu_2ZtzOqlQTyiUXdrixRmX4d1Fpfozzki_-KN33GGwg.rMvzXm_PuuuWe2gB2FBFCQ6cq3FIhRYezLqGX0plgrYg.JPEG.charade6/0005.jpg?type=w773)
+  <br>
+  디자인이 마음에 들지 않아 XD -> Figma 디자인툴 변경<br>
+  실시간 협업하여 디자인 새로 제작<br>
+  [Figma링크](https://www.figma.com/file/9dfq1s8VXeOC4mYkayag2z/evcar?node-id=1%3A2)<br>
+  ![mainp](https://postfiles.pstatic.net/MjAyMjA0MTVfMTAg/MDAxNjUwMDI4NTg0NzU0.1RYroS1-ZErfOSXPhAGnH_OzYE7tFgSXTlg26YbxIdgg.KlybjauM2dSjwmg8jwK9u6nkms2iKacet6hqQjIFjscg.JPEG.charade6/0001.jpg?type=w773)
+  메인페이지 완성, 서브페이지 와이어프레임만 제작
+
+<br>
+
+- axios + cheerio -> 정적페이지 크롤링만 가능<br>
+  크롤링하려는 [페이지](https://www.ev.or.kr/portal/carInfoView)가 post형식으로 출력하므로 <br>
+  주소가 바뀌지않아 cheerio로 크롤링 불가<br>
+  -> 배포페이지변경, selenium모듈 학습필요<br>
+  -> json파일 직접입력하여 출력하는것으로 변경<br>
+
+```jsx
+{
+    "carList": [
+        {
+            "name": "EV6 롱레인지 2WD 19인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 185,
+            "mile-roomtmp": 483,
+            "mile-coldtmp": 446,
+            "battery": 77.506,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "EV6 롱레인지 2WD 20인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 185,
+            "mile-roomtmp": 445,
+            "mile-coldtmp": 411,
+            "battery": 77.506,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "EV6 롱레인지 4WD 19인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 188,
+            "mile-roomtmp": 458,
+            "mile-coldtmp": 414,
+            "battery": 77.506,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "EV6 롱레인지 4WD 20인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 188,
+            "mile-roomtmp": 407,
+            "mile-coldtmp": 380,
+            "battery": 77.506,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "EV6 스탠다드 2WD 19인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 185,
+            "mile-roomtmp": 377,
+            "mile-coldtmp": 347,
+            "battery": 58.124,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "EV6 스탠다드 4WD 19인치(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 188,
+            "mile-roomtmp": 362,
+            "mile-coldtmp": 324,
+            "battery": 58.124,
+            "money": 700,
+            "tel": "080-200-2000"
+        },
+        {
+            "name": "니로(HP)(2022년)",
+            "maker": "기아",
+            "people": 5,
+            "distance": 167,
+            "mile-roomtmp": 385,
+            "mile-coldtmp": 348.5,
+            "battery": 64.08,
+            "money": 700,
+            "tel": "080-200-2000"
+        }
+    ]
+}
+```
+
+---
+
 ### [ 04/06 ]
 
 - 공공데이터 답변이 오지않아 api 사용불가
