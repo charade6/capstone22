@@ -1,20 +1,193 @@
 # 장지원 [ 201640133 ] - 캡스톤디자인
 
-팀명 : bit<br />
-이름 : 장지원 (팀장: WEB+DESIGN)<br />
-졸업작품 소개 : <br />
+팀명 : bit<br>
+이름 : 장지원 (팀장: WEB+DESIGN)<br>
+졸업작품 소개 페이지 : <br>
 
 ## **[ 졸업작품 소개 ]**
 
-- 작품명 : EVCAR
-  <br />
-- 개발환경 : React
-  <br />
+- 작품명 : EVCAR<br>
+- 개발환경 : React<br>
 - 작품 소개 : 전기자동차 소개 페이지입니다.
 
-<br/>
+<br>
 
 ## **[ 개발 일지 ]**
+
+### [ 04/27 ]
+
+- repository 생성, 기본 틀 제작
+
+- 버튼 필터 연습<br>
+
+```jsx
+import { useState } from "react"
+import JsonTest from "./JsonTest"
+
+function App() {
+  // state 설정
+  const [input, setInput] = useState("")
+
+  // input이 바뀔때마다 state에 저장
+  const handleChange = (e) => {
+    setInput(e.target.value)
+  }
+
+  return (
+    <div className="App">
+      <div>
+        <div>
+          <input type="radio" name="param" value="기아" onChange={handleChange} />
+          기아
+          <br />
+          <input type="radio" name="param" value="대창모터스" onChange={handleChange} />
+          대창모터스
+        </div>
+        // state값 전달
+        <JsonTest param={input} />
+      </div>
+    </div>
+  )
+}
+
+export default App
+
+-------
+
+function JsonTest({ param }) {
+  // 전달값과 비교하여 필터
+  const makerFilter = carData.carList.filter(
+    (carList) => carList.maker === param
+  )
+
+  return (
+    <div>
+      <ul>
+        // 필터의 값이 없으면 No Data 출력
+        {makerFilter.length === 0 ? (
+          <h2>No Data</h2>
+        ) : (
+          // 필터값이 있을경우 출력
+          makerFilter.map((carList, index) => (
+            <li key={index}>
+              {carList.maker}
+              <ul>
+                <div>
+                  <img src={carList.img} alt="carimg" width="250px" height="150px" />
+                </div>
+                <div>
+                  <li>{carList.name}</li>
+                  <li>승차인원 : {carList.people}인승</li>
+                  <li>최고속도출력 : {carList.distance}km/h</li>
+                  <li>
+                    1회충전주행거리 : (상온){carList.mile_roomtmp}km (저온)
+                    {carList.mile_coldtmp}km
+                  </li>
+                  <li>
+                    배터리 : {carList.battery_type}({carList.capacity}kWh)
+                  </li>
+                  <li>국고보조금 : {carList.money}만원</li>
+                  <li>제조사번호 : {carList.tel}</li>
+                </div>
+              </ul>
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  )
+}
+
+export default JsonTest
+```
+
+![filter1](https://postfiles.pstatic.net/MjAyMjA0MjlfMTAg/MDAxNjUxMjEzMTE3OTU0.adyghzwJni-Tq5u_3nQIyz1lOU8CqDC5OejBCbmb-yMg.vdbQPvfe7li5P_y4nMasIp5pJhYDS3umPg3U6J8n2Cwg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-04-29_151756.png?type=w773)
+![filter2](https://postfiles.pstatic.net/MjAyMjA0MjlfMjIg/MDAxNjUxMjEzMTE3OTkw.lTj_KKCrRSUYUMC3cVBtkTmvos76GvuvNMPwIqhICCsg.aLiUj8_ISy_w1oWJL5O-f8JJ9Vz8WPxxazaZXQlheSMg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-04-29_151820.png?type=w773)
+
+- youtube 백그라운드 넣기<br>
+  iframe 사용 -> react-youtube-background로 변경
+
+```jsx
+import YoutubeBackground from "react-youtube-background"
+import Header from "./Header"
+import Footer from "./Footer"
+
+function Home() {
+  return (
+    <div>
+      <Header />
+      <YoutubeBackground videoId="gONEwEUVr-s" className="youtube" />
+      <div className="section sec1">
+        <div className="sec-inner">hello</div>
+      </div>
+      <div className="section sec2">
+        <div className="sec-inner">hello</div>
+      </div>
+      <div className="section sec3">
+        <div className="sec-inner">hello</div>
+      </div>
+      <Footer />
+    </div>
+  )
+}
+
+export default Home
+```
+
+- 브라우저 라우터 사용
+
+```jsx
+import Home from "./component/Home"
+import Info from "./component/Info"
+import Search from "./component/Search"
+import Map from "./component/Map"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
+
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={<Home />} />
+          <Route path="/info" component={<Info />} />
+          <Route path="/search" component={<Search />} />
+          <Route path="/map" component={<Map />} />
+        </Switch>
+      </BrowserRouter>
+    </div>
+  )
+}
+
+export default App
+```
+
+```
+❗오류
+export 'Switch' (imported as 'Switch') was not found in 'react-router-dom' (possible exports: BrowserRouter, HashRouter, Link, MemoryRouter, NavLink, Navigate, NavigationType, Outlet, Route, Router, Routes, UNSAFE_LocationContext, UNSAFE_NavigationContext, UNSAFE_RouteContext, createPath, createRoutesFromChildren, createSearchParams, generatePath, matchPath, matchRoutes, parsePath, renderMatches, resolvePath, unstable_HistoryRouter, useHref, useInRouterContext, useLinkClickHandler, useLocation, useMatch, useNavigate, useNavigationType, useOutlet, useOutletContext, useParams, useResolvedPath, useRoutes, useSearchParams)
+```
+
+react-router-dom 버전 변경으로 Switch 사용불가 -> [공식문서](https://reactrouter.com/docs/en/v6/upgrading/v5) 참고하여 수정
+
+```jsx
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/info" element={<Info />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/map" element={<Map />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
+}
+```
+
+<br>
+
+---
 
 ### [ 04/13 ]
 
@@ -211,7 +384,7 @@ money: $(this).find("dl > dd:nth-child(6)").text().replace(replacer, ''),
 
 ### [ 03/30 ]
 
-- ❗ 공공데이터포털 전기차 충전소 운영정보 활용신청<br />
+- ❗ 공공데이터포털 전기차 충전소 운영정보 활용신청<br>
   -> 인증키 오류로 인하여 문의접수<br>
   ![공공데이터1](https://postfiles.pstatic.net/MjAyMjA0MDFfMjY1/MDAxNjQ4ODIxMjg1NTg0.e1tuw39zKLycPKqMzLI72b0UUQJRNrxOhArGRtbw6-Qg.KmSvlf16uvzDrB8QcvMEfg0s9t-tv1By4T6irCUu4Ywg.PNG.charade6/1.PNG?type=w773)
   ![공공데이터2](https://postfiles.pstatic.net/MjAyMjA0MDFfMjAw/MDAxNjQ4ODIxMjg1NTQ5.I0aC7_91xlhf2gesqWj3MPxMctNAQAUz0nVmWpRAuKQg.TwrpP2KVBb5aWVP-nSB0me8wDrk5Q5VEoU2er7hNmK8g.PNG.charade6/3.PNG?type=w773)
@@ -242,15 +415,15 @@ export default MapContainer
 
 ![map](https://postfiles.pstatic.net/MjAyMjA0MDFfNTcg/MDAxNjQ4ODIzNDMyODY5.drXS5BILYMs62hZpheodqNQHLTzKNk60e_t_kcnn6ngg.GGSPZE_PXZ-I0ULcrgqFw2NS50wxgm-ibDHhxePwfXgg.PNG.charade6/%EC%A0%9C%EB%AA%A9_%EC%97%86%EC%9D%8C.png?type=w773)
 
-<br />
+<br>
 
 ---
 
 ### [ 03/23 ]
 
-주제 확정<br />
-작품 기술서 작성<br />
-로고 제작 - 1번으로 확정<br />
+주제 확정<br>
+작품 기술서 작성<br>
+로고 제작 - 1번으로 확정<br>
 ![Logo](https://postfiles.pstatic.net/MjAyMjA0MDJfMjIy/MDAxNjQ4ODI5NzkzMzU5.B4lFh_JzhevasoqiLkG9fl1esaGK1Bm4bWSAIiHHlNsg.93H3AMYt5LpCXMxgCO5K7o0L0_2biUPL0FJpuf755mUg.PNG.charade6/LOGO.png?type=w773)
 
 메인페이지 디자인 - [URL](https://xd.adobe.com/view/33f1e908-2110-4dd0-971a-23997cf09deb-66a2/)
@@ -261,8 +434,8 @@ export default MapContainer
 
 ### [ 03/09 ]
 
-작품 주제선정 토의<br />
-사용할 프로그램 선정<br />
+작품 주제선정 토의<br>
+사용할 프로그램 선정<br>
 
 <details>
     <summary>작품기술서 작성법</summary>
