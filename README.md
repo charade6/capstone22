@@ -7,12 +7,137 @@
 ## **[ 졸업작품 소개 ]**
 
 - 작품명 : EVCAR<br>
-- 개발환경 : React<br>
+- 개발환경 : React, Figma, PhotoShop<br>
 - 작품 소개 : 전기자동차 소개 페이지입니다.
 
 <br>
 
 ## **[ 개발 일지 ]**
+
+### [ 05/04 ]
+
+- 메인 페이지 완성, 서브페이지 프레임 디자인<br>
+  ![1](https://postfiles.pstatic.net/MjAyMjA1MDZfMTIz/MDAxNjUxODQ4NzA0NjI5.nBa6RrGfhdVARZQeW-Ev8iZavdomSVQy0T6_BCH6__Qg.G_gMoCXgmaQHDD0H-qxPq_N5SAhG86n5CCKCUic46i8g.JPEG.charade6/%EC%9B%B9_%EC%BA%A1%EC%B2%98_6-5-2022_231321_localhost.jpeg?type=w773)
+  ![2](https://postfiles.pstatic.net/MjAyMjA1MDZfMTM0/MDAxNjUxODQ4NzA0OTYy.3S-Yo9hwPCQoMr2B9cGS__mxAA0z11wSwr4ZSMYEejUg.UMx0hnegmi8Ix9bOPYcoDEPz56Kyiklxv-b9JVZ0EzEg.JPEG.charade6/%EC%9B%B9_%EC%BA%A1%EC%B2%98_6-5-2022_231333_localhost.jpeg?type=w773)
+  ![3](https://postfiles.pstatic.net/MjAyMjA1MDZfMjk1/MDAxNjUxODQ4NzA0NzA4.mmkkz1EHLHVGU05r3w41U0oZ6as7h-4Fzr91q0SSLXcg.Uukthn00AXB1Tnusf7eq0YQF4fbnWtZ8w8qkZgVUt-Yg.JPEG.charade6/%EC%9B%B9_%EC%BA%A1%EC%B2%98_6-5-2022_23279_localhost.jpeg?type=w773)
+
+- 카카오맵api 추가<br>
+
+```jsx
+import { useEffect } from "react"
+
+const { kakao } = window
+
+const MapContainer = () => {
+  useEffect(() => {
+    // 카카오맵 컨테이너
+    const container = document.getElementById("Map")
+    const options = {
+      center: new kakao.maps.LatLng(37.57002, 126.97962),
+      level: 3,
+    }
+    const map = new kakao.maps.Map(container, options)
+
+    console.log(map)
+
+    // 내위치 불러오기
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        let latitude = pos.coords.latitude
+        let longitude = pos.coords.longitude
+        let accuracy = pos.coords.accuracy
+        let level = map.getLevel()
+        let locPosition = new kakao.maps.LatLng(latitude, longitude)
+        // 위치정확도가 낮을경우 맵레벨 증가
+        if (accuracy > 80) {
+          map.setLevel(
+            (level += Math.round(Math.log(accuracy / 50) / Math.LN2))
+          )
+          console.log(Math.round(Math.log(accuracy / 50) / Math.LN2))
+        }
+        displayMarker(locPosition)
+      })
+    }
+    function displayMarker(locPosition) {
+      let marker = new kakao.maps.Marker({
+        map: map,
+        position: locPosition,
+      })
+      marker.setMap(map)
+      map.setCenter(locPosition)
+    }
+
+    // 줌 컨트롤
+    let zoomControl = new kakao.maps.ZoomControl()
+    map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT)
+
+    // 로드뷰
+    // map.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW)
+
+    // 마커생성
+    // var marker = new kakao.maps.Marker({
+    //   positions: new kakao.maps.LatLng(latArray[i], longArray[i]),
+    // })
+  }, [])
+
+  return <div id="Map"></div>
+}
+
+export default MapContainer
+```
+
+![map](https://postfiles.pstatic.net/MjAyMjA1MDZfMTg3/MDAxNjUxODQ4NzA1MzQ1.zwFBhGhHRRzPJBdK1dMZc08g2HySiUKPLneJItECI-Ig._lgts-kOoAlO6kjU1oZBVMDWwiUiTrC9EMTE_MgSWn8g.JPEG.charade6/%EC%9B%B9_%EC%BA%A1%EC%B2%98_6-5-2022_232724_localhost.jpeg?type=w773)
+
+- 공공데이터 api 불러오기<br>
+
+```jsx
+async function getApi() {
+  await axios({
+    method: "get",
+    url: `http://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=gIgWSDzCeTDpTHNna3UfLVrfBmHbLPDu8IRh%2FvJuoHy5Sp1OFCc9r6uWHIqcEpCF8pWmul9zZMDQLafiKcrx3Q%3D%3D&pageNo=1&numOfRows=10`,
+  }).then(function (res) {
+    const dataSet = res.data
+    console.log(dataSet)
+  })
+}
+useEffect(() => {
+  getApi()
+}, [])
+```
+
+![err](https://postfiles.pstatic.net/MjAyMjA1MDZfMjM2/MDAxNjUxODQ4NzQ5ODk3.rvvqtddm8ZreDBl9SkkafENxw-lew_z05M4NyofgBT8g.j5C_PhN6wJ8GJlJVpg43phsOuoit6Uu3axxzMe0xHckg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-05-06_232912.png?type=w773)
+
+❗ cors 오류<br>
+리액트 앱의 주소와 공공데이터 API의 주소는 다르기때문에<br>
+브라우저의 cors 정책에 따라서 공공데이터를 가져오는 것이 허용되지 않는다.
+=> package.json에 proxy 추가
+
+```jsx
+{
+  ~
+  },
+  "proxy": "http://apis.data.go.kr/"
+}
+```
+
+```jsx
+// url 변경
+async function getApi() {
+  await axios({
+    method: "get",
+    url: `/B552584/EvCharger/getChargerInfo?serviceKey=gIgWSDzCeTDpTHNna3UfLVrfBmHbLPDu8IRh%2FvJuoHy5Sp1OFCc9r6uWHIqcEpCF8pWmul9zZMDQLafiKcrx3Q%3D%3D&pageNo=1&numOfRows=10`,
+  }).then(function (res) {
+    const dataSet = res.data
+    console.log(dataSet)
+  })
+}
+```
+
+![s](https://postfiles.pstatic.net/MjAyMjA1MDZfOTQg/MDAxNjUxODQ4NzUzODUx.ui95l8fWSiEYVbbGnrnk3QVMyeBR8WkcUdT4bVI0K2sg.K1xjVTPo40QMBr1jf2tZPMVv9Nk-ufCPvJN2_eq9-Ewg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-05-06_233440.png?type=w773)
+
+<br>
+
+---
 
 ### [ 04/27 ]
 
