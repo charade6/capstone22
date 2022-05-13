@@ -14,6 +14,95 @@
 
 ## **[ 개발 일지 ]**
 
+### [ 05/11 ]
+
+- 로딩 추가
+
+```jsx
+const [isLoading, setIsLoading] = useState(true)
+
+~
+
+return (
+    <div className="sub-page">
+      <div className="banner ban3" />
+      <div className="main-content">
+        <div className="cont-inner">
+          <h2>Map</h2>
+          {isLoading ? (
+            <div>
+              <h2>로딩중</h2>
+            </div>
+          ) : (
+            <MapContainer props={api} />
+          )}
+        </div>
+      </div>
+    </div>
+  )
+```
+
+- 카카오맵api 이용
+
+```jsx
+// 충전소 위치 마킹
+for (let i = 0; i < list.length; i++) {
+  let marker = new kakao.maps.Marker({
+    map: map,
+    position: new kakao.maps.LatLng(list[i].lat, list[i].lng),
+    clickable: true,
+  })
+  let infowindow = new kakao.maps.InfoWindow({
+    content: "<div style='padding:5px'>주소 : " + list[i].addr + "</div>",
+    removable: true,
+  })
+  marker.setMap(map)
+
+  // 마커 클릭 이벤트
+  kakao.maps.event.addListener(marker, "click", function () {
+    infowindow.open(map, marker)
+  })
+}
+```
+
+![1](https://postfiles.pstatic.net/MjAyMjA1MTNfOTMg/MDAxNjUyNDUzMzE2NDky.ggHgLaKjJAoDuNeWCu71wg3QAGxR9V5Mc5zxDMKg3X0g.4tyPDpRkkvnU8MsfXRjm4GVQawFR62q0KShHLR9RNs8g.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-05-13_212045.png?type=w773)<br>
+![2](https://postfiles.pstatic.net/MjAyMjA1MTNfMTk1/MDAxNjUyNDUzMzExOTgw.qnAvGlpJLNwLcB6oYxXLEhc7n8k4Lpi9okUflmBm7nMg._B5Su9oBz_bCcfTYR_TBfBMEWBYVJpv5lVuiI6w_tDsg.PNG.charade6/sdadasd.png?type=w773)<br>
+마커가 너무 많아 클러스터로 변경
+
+```jsx
+var clusterer = new kakao.maps.MarkerClusterer({
+  map: map,
+  averageCenter: true,
+  minLevel: 8,
+})
+
+let markers = list.map(function (position) {
+  let marker = new kakao.maps.Marker({
+    position: new kakao.maps.LatLng(position.lat, position.lng),
+  })
+  kakao.maps.event.addListener(marker, "click", function () {
+    let infowindow = new kakao.maps.InfoWindow({
+      content: "<div style='padding:5px'>주소 : " + position.addr + "</div>",
+      removable: true,
+    })
+    infowindow.open(map, marker)
+  })
+  return marker
+})
+
+clusterer.addMarkers(markers)
+
+// 클러스터 클릭시 맵 확대
+kakao.maps.event.addListener(clusterer, "clusterclick", function (cluster) {
+  var level = map.getLevel() - 1
+  map.setLevel(level, { anchor: cluster.getCenter() })
+})
+```
+
+![3](https://postfiles.pstatic.net/MjAyMjA1MTNfNTEg/MDAxNjUyNDUzMzE2NDQ0.wzFhOz25CjA3M9AYNpdE260sJBSBZPCO-hYrL3SWio8g.uKBAwgG03BZNfpyif5gQDT278XYC30kvbSqWf0_yvWIg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-05-13_232300.png?type=w773)
+
+---
+
 ### [ 05/04 ]
 
 - 메인 페이지 완성, 서브페이지 프레임 디자인<br>
