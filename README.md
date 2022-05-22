@@ -14,6 +14,114 @@
 
 ## **[ 개발 일지 ]**
 
+### [ 05/18 ]
+
+- 검색창
+
+```jsx
+import { useState, useEffect, useRef } from "react"
+
+function MapContainer({ maps }) {
+  const inputRef = useRef()
+  const [searchList, setSearchList] = useState(maps)
+
+  const search = () => {
+    // input값이 없을경우 전부마킹
+    if (!inputRef.current.value) {
+      setSearchList(maps)
+      return
+    }
+    const searchValue = searchList.filter(
+      (list) => list.addr.indexOf(inputRef.current.value) !== -1
+    )
+    if (!searchValue.length) {
+      alert("검색 결과가 없습니다.")
+      return
+    }
+    setSearchList(searchValue)
+  }
+
+  useEffect(() => {
+    // 충전소 위치 마킹
+    let markers = searchList.map(function (list) {
+      let marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(list.lat, list.lng),
+      })
+      let contents =
+        "<div style='padding:5px; width:100%; font-size:14px'>" +
+        "<b style='font-size:16px'>" +
+        list.statNm +
+        "</b><br><p>주소 : " +
+        list.addr +
+        "<br>중전기 타입 : " +
+        list.chgerType +
+        "<br>충전기 상태 : " +
+        list.stat +
+        "<br>이용시간 : " +
+        list.useTime +
+        "<br>기관 연락처 : " +
+        list.busiCall +
+        "</p></div>"
+
+      let infowindow = new kakao.maps.InfoWindow({
+        content: contents,
+      })
+
+      // 마커호버이벤트로 변경
+      kakao.maps.event.addListener(marker, "mouseover", function () {
+        infowindow.open(map, marker)
+      })
+      kakao.maps.event.addListener(marker, "mouseout", function () {
+        infowindow.close()
+      })
+      return marker
+    })
+
+    clusterer.addMarkers(markers)
+
+    // input 값이 있을경우 검색결과 위치로 이동
+    if (inputRef.current.value) {
+      let bounds = new kakao.maps.LatLngBounds()
+      let center = searchList.map(
+        (position) => new kakao.maps.LatLng(position.lat, position.lng)
+      )
+      for (let i = 0; i < center.length; i++) {
+        bounds.extend(center[i])
+      }
+      map.setBounds(bounds)
+    }
+  }, [searchList])
+
+  return (
+    <div className="map_cont">
+      <div className="sch_cont">
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="지역명을 입력"
+          // 엔터키입력시 검색
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              search()
+            }
+          }}
+        />
+        <button onClick={search}>
+          <FaSearch size="20" />
+        </button>
+      </div>
+      <div id="Map"></div>
+    </div>
+  )
+}
+
+export default MapContainer
+```
+
+![1](https://postfiles.pstatic.net/MjAyMjA1MjJfMjcx/MDAxNjUzMjMxMzUxNzUy.oIIpaFSqt9_Z1a2Fc7n5LxpQD0HiWsTfKFPP7thz50Eg.OxRJTyb8f_hy8C4SQcvRoJs9zIJP-zDYululSHlVPcgg.PNG.charade6/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2022-05-22_230311.png?type=w773)
+
+---
+
 ### [ 05/11 ]
 
 - 로딩 추가
@@ -70,7 +178,7 @@ for (let i = 0; i < list.length; i++) {
 마커가 너무 많아 클러스터로 변경
 
 ```jsx
-var clusterer = new kakao.maps.MarkerClusterer({
+let clusterer = new kakao.maps.MarkerClusterer({
   map: map,
   averageCenter: true,
   minLevel: 8,
@@ -94,7 +202,7 @@ clusterer.addMarkers(markers)
 
 // 클러스터 클릭시 맵 확대
 kakao.maps.event.addListener(clusterer, "clusterclick", function (cluster) {
-  var level = map.getLevel() - 1
+  let level = map.getLevel() - 1
   map.setLevel(level, { anchor: cluster.getCenter() })
 })
 ```
@@ -164,7 +272,7 @@ const MapContainer = () => {
     // map.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW)
 
     // 마커생성
-    // var marker = new kakao.maps.Marker({
+    // let marker = new kakao.maps.Marker({
     //   positions: new kakao.maps.LatLng(latArray[i], longArray[i]),
     // })
   }, [])
