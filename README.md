@@ -1,14 +1,14 @@
 # 장지원 [ 201640133 ] - 캡스톤디자인
 
 팀명 : bit<br>
-이름 : 장지원 (팀장: WEB+DESIGN)<br>
-졸업작품 소개 페이지 : <br>
+이름 : 장지원 (팀장: FRONTEND + DESIGN)<br>
+졸업작품 페이지 : [EVCAR](https://evcar.netlify.app)<br>
 
 ## **[ 졸업작품 소개 ]**
 
 - 작품명 : EVCAR<br>
-- 개발환경 : React, Figma, PhotoShop<br>
-- 작품 소개 : 전기자동차 소개 페이지입니다.
+- 개발환경 : React, Css3, Figma, PhotoShop, Illustrator<br>
+- 작품 소개 : React hooks를 사용하여 제작한 전기자동차 소개 페이지입니다.
 
 <br>
 
